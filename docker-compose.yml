@@ -1,0 +1,7 @@
+version: '3'
+services:
+  xing:
+    container_name: xing
+    build: .
+    volumes:
+      - /Users/yuqing.ji/xing:/xing

@@ -1,0 +1,15 @@
+---
+- name: provision
+  tasks: 
+  - name: rm old container
+  - name: rm old volume
+  - name: start the container
+    docker_container:
+      name: xing
+      pull: yes
+      image: ""
+      trust_image_content: true
+      volumes: 
+        - "xing:/home/xing/"
+      state: started
+      recreate: yes
