@@ -1,5 +1,7 @@
 #!/bin/bash
-apt-get install python-pip
+
+echo "hello world"
+#sudo apt-get install python-pip
 #pip install
 
 
