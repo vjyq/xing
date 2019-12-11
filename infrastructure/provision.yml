@@ -1,4 +1,7 @@
 ---
-- name: provision
+- name: test
+  hosts: ?
+
   tasks:
-  - name: run
+    - name: test
+      shell: echo "hello world"
