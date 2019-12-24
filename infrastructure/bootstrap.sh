@@ -1,7 +1,5 @@
 #!/bin/bash
 
-echo "hello world"
-#sudo apt-get install python-pip
-#pip install
-
+curl -O https://bootstrap.pypa.io/get-pip.py
+python3 get-pip.py --user
 

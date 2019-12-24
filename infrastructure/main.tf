@@ -68,8 +68,27 @@ resource "aws_instance" "xing_instance" {
   associate_public_ip_address = true
   instance_type = "t2.micro"
   key_name = "${var.key_name}"
-  provisioner "local-exec" {
-    command = "bash bootstrap.sh"
+  provisioner "file" {
+    connection {
+      type     = "ssh"
+      user     = "ubuntu"
+      private_key = "${file("${var.key_path}")}"
+      host     = "${self.public_ip}"
+    }
+    source      = "bootstrap.sh"
+    destination = "bootstrap.sh"
+  }
+  provisioner "remote-exec" {
+    connection {
+      type     = "ssh"
+      user     = "ubuntu"
+      private_key = "${file("${var.key_path}")}"
+      host     = "${self.public_ip}"
+    }
+    inline = [
+      "chmod +x bootstrap.sh",
+      "bash bootstrap.sh",
+    ]
   }
   subnet_id = "${aws_subnet.xing_vpc_subnet_public.id}"
   tags = {
