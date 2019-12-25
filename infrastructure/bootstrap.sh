@@ -1,5 +1,4 @@
 #!/bin/bash
 
-curl -O https://bootstrap.pypa.io/get-pip.py
-python3 get-pip.py --user
-
+sudo apt-get update
+#sudo apt-get -y install <service-name>
