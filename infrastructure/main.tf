@@ -43,8 +43,8 @@ resource "aws_route_table_association" "xing_vpc_subnet_route_public"{
   route_table_id = "${aws_route_table.xing_vpc_subnet_route.id}"
 }
 
-resource "aws_security_group" "xing_sg_ssh" {
-  name = "xing_sg_ssh"
+resource "aws_security_group" "xing_sg" {
+  name = "xing_sg"
   egress {
     from_port = 0
     to_port = 0
@@ -57,8 +57,14 @@ resource "aws_security_group" "xing_sg_ssh" {
     protocol = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
+  ingress {
+    from_port = 443
+    to_port = 443
+    protocol = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
   tags = {
-    Name = "xing_sg_ssh"
+    Name = "xing_sg"
   }
   vpc_id = "${aws_vpc.xing_vpc.id}"
 }
@@ -68,33 +74,16 @@ resource "aws_instance" "xing_instance" {
   associate_public_ip_address = true
   instance_type = "t2.micro"
   key_name = "${var.key_name}"
-  provisioner "file" {
-    connection {
-      type     = "ssh"
-      user     = "ubuntu"
-      private_key = "${file("${var.key_path}")}"
-      host     = "${self.public_ip}"
-    }
-    source      = "bootstrap.sh"
-    destination = "bootstrap.sh"
-  }
-  provisioner "remote-exec" {
-    connection {
-      type     = "ssh"
-      user     = "ubuntu"
-      private_key = "${file("${var.key_path}")}"
-      host     = "${self.public_ip}"
-    }
-    inline = [
-      "chmod +x bootstrap.sh",
-      "bash bootstrap.sh",
-    ]
-  }
+  user_data = "${file("bootstrap.sh")}"
   subnet_id = "${aws_subnet.xing_vpc_subnet_public.id}"
   tags = {
     Name = "xing_instance"
   }
-  vpc_security_group_ids = ["${aws_security_group.xing_sg_ssh.id}"]
+  vpc_security_group_ids = ["${aws_security_group.xing_sg.id}"]
+}
+
+output "xing_instance_id" {
+  value = "${aws_instance.xing_instance.id}"
 }
 
 output "xing_instance_public_ip" {
