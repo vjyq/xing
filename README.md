@@ -13,6 +13,10 @@ git clone https://github.com/vjyq/huz.git
 
 ### Install requirements
 ```
+# Install terraform
+brew install terraform
+
+# Install Python dependencies
 cd xing
 pip install -r requirements.txt
 ```
